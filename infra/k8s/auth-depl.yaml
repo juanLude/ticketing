@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: us.grc.io/ticketing-dev-453000/auth
+          image: ludevid/auth
 
 ---
 apiVersion: v1

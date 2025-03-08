@@ -7,10 +7,10 @@ deploy:
 build:
   # local:
   #   push: false
-  googleCloudBuild:
-    projectId: ticketing-dev-453000
+  # googleCloudBuild:
+  #   projectId: ticketing-dev-453000
   artifacts:
-    - image: us.grc.io/ticketing-dev-453000/auth
+    - image: ludevid/auth
       context: auth
       docker:
         dockerfile: Dockerfile
