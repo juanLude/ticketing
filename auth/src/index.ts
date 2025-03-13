@@ -11,14 +11,15 @@ import mongoose from "mongoose";
 
 const app = express();
 app.use(json());
+require("express-async-errors");
 
 app.use(currentUserRouter);
 app.use(signinRouter);
 app.use(signoutRouter);
 app.use(signupRouter);
-app.all("*", async (req, res) => {
-  throw new NotFoundError();
-});
+// app.all("*", async (req, res) => {
+//   throw new NotFoundError();
+// });
 app.use(errorHandler);
 
 const start = async () => {
