@@ -7,10 +7,19 @@ import { signoutRouter } from "./routes/signout";
 import { signupRouter } from "./routes/signup";
 import { errorHandler } from "./middlewares/error-handler";
 import { NotFoundError } from "./errors/not-found-error";
+import cookieSession from "cookie-session";
+
 import mongoose from "mongoose";
 
 const app = express();
+app.set("trust proxy", true); // Trust traffic as secure even though it is coming from a proxy
 app.use(json());
+app.use(
+  cookieSession({
+    signed: false,  // Disable encryption
+    secure: true // Only use cookies over HTTPS
+));
+
 require("express-async-errors");
 
 app.use(currentUserRouter);
