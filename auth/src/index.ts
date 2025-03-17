@@ -16,9 +16,10 @@ app.set("trust proxy", true); // Trust traffic as secure even though it is comin
 app.use(json());
 app.use(
   cookieSession({
-    signed: false,  // Disable encryption
-    secure: true // Only use cookies over HTTPS
-));
+    signed: false, // Disable encryption
+    secure: true, // Only use cookies over HTTPS
+  })
+);
 
 require("express-async-errors");
 
