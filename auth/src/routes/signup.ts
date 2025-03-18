@@ -39,7 +39,7 @@ router.post(
         id: user.id,
         email: user.email,
       },
-      "kajkjk"
+      process.env.JWT_KEY! // ! tells TS that we are sure that this env variable is defined
     );
 
     // Store it on session object

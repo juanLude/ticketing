@@ -6,17 +6,16 @@ import { signinRouter } from "./routes/signin";
 import { signoutRouter } from "./routes/signout";
 import { signupRouter } from "./routes/signup";
 import { errorHandler } from "./middlewares/error-handler";
-import { NotFoundError } from "./errors/not-found-error";
 import cookieSession from "cookie-session";
 
 import mongoose from "mongoose";
 
 const app = express();
-app.set("trust proxy", true); // Trust traffic as secure even though it is coming from a proxy
+app.set("trust proxy", true); // Trust traffic as secure even though it is coming from a proxy. Traffic is coming from Ingress Nginx, which is a proxy.
 app.use(json());
 app.use(
   cookieSession({
-    signed: false, // Disable encryption
+    signed: false, // Disable encryption becuase JWT is already encrypted
     secure: true, // Only use cookies over HTTPS
   })
 );
@@ -33,6 +32,9 @@ app.use(signupRouter);
 app.use(errorHandler);
 
 const start = async () => {
+  if (!process.env.JWT_KEY) {
+    throw new Error("JWT_KEY must be defined");
+  }
   try {
     await mongoose.connect("mongodb://auth-mongo-srv:27017/auth");
     console.log("Connected to MongoDB");
