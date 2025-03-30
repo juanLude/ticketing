@@ -8,9 +8,6 @@ import { signupRouter } from "./routes/signup";
 import { errorHandler } from "./middlewares/error-handler";
 import cookieSession from "cookie-session";
 
-import mongoose from "mongoose";
-import e from "express";
-
 const app = express();
 app.set("trust proxy", true); // Trust traffic as secure even though it is coming from a proxy. Traffic is coming from Ingress Nginx, which is a proxy.
 app.use(json());
