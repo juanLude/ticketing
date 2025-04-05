@@ -9,8 +9,8 @@ export default ({ currentUser }) => {
     .map(({ label, href }) => {
       return (
         <li key={href} className="nav-item">
-          <Link href={href}>
-            <a className="nav-link">{label}</a>
+          <Link href={href} className="nav-link">
+            {label}
           </Link>
         </li>
       );
@@ -18,7 +18,7 @@ export default ({ currentUser }) => {
   return (
     <nav className="navbar navbar-light bg-light">
       <Link href="/" className="navbar-brand">
-        <a className="navbar-brand">GitTix</a>
+        GitTix
       </Link>
 
       <div className="d-flex justify-content-end">
