@@ -19,7 +19,7 @@ export const currentUser = (
   next: NextFunction
 ) => {
   if (!req.session?.jwt) {
-    return next();
+    return next(); // No JWT present, so just call next middleware
   }
 
   try {
@@ -27,8 +27,11 @@ export const currentUser = (
       req.session.jwt,
       process.env.JWT_KEY!
     ) as UserPayload;
-    req.currentUser = payload;
-  } catch (err) {}
+    req.currentUser = payload; // Attach the payload to the request object
+    next(); // authenticated user, call next middleware
+  } catch (err) {
+    return res.status(401).send({ message: "Invalid or expired token" });
+  }
 
-  next();
+  next(); // If everything goes well, move on to the next middleware
 };

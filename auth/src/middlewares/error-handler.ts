@@ -10,10 +10,12 @@ export const errorHandler: ErrorRequestHandler = (
 ): void => {
   if (err instanceof CustomError) {
     res.status(err.statusCode).send({ errors: err.serializeErrors() });
+    return;
   }
 
   // Send a 400 Bad Request response with the error message
   res.status(400).send({
     errors: [{ message: "Something went wrong" }],
   });
+  return; // Ensure function exits after sending a response
 };

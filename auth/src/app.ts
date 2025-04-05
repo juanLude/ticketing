@@ -13,7 +13,7 @@ app.set("trust proxy", true); // Trust traffic as secure even though it is comin
 app.use(json());
 app.use(
   cookieSession({
-    signed: false, // Disable encryption becuase JWT is already encrypted
+    signed: false, // Disable encryption because JWT is already encrypted
     secure: true, // Only use cookies over HTTPS
   })
 );
