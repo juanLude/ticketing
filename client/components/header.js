@@ -22,7 +22,7 @@ export default ({ currentUser }) => {
       </Link>
 
       <div className="d-flex justify-content-end">
-        <ul className="nav d-flex align-items-center"></ul>
+        <ul className="nav d-flex align-items-center">{links}</ul>
       </div>
     </nav>
   );
