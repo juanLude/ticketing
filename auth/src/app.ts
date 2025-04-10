@@ -5,7 +5,7 @@ import { currentUserRouter } from "./routes/current-user";
 import { signinRouter } from "./routes/signin";
 import { signoutRouter } from "./routes/signout";
 import { signupRouter } from "./routes/signup";
-import { errorHandler } from "@juanludetickets/common";
+import { errorHandler, NotFoundError } from "@juanludetickets/common";
 import cookieSession from "cookie-session";
 
 const app = express();
@@ -25,6 +25,9 @@ app.use(signinRouter);
 app.use(signoutRouter);
 app.use(signupRouter);
 
+app.all("*", async (req, res) => {
+  throw new NotFoundError();
+});
 app.use(errorHandler);
 
 export { app };
