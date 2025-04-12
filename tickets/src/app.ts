@@ -2,7 +2,12 @@ import express from "express";
 import "express-async-errors";
 import { json } from "body-parser";
 import cookieSession from "cookie-session";
-import { errorHandler, NotFoundError } from "@juanludetickets/common";
+import {
+  errorHandler,
+  NotFoundError,
+  currentUser,
+} from "@juanludetickets/common";
+import { createTicketRouter } from "./routes/new";
 
 const app = express();
 app.set("trust proxy", true); // Trust traffic as secure even though it is coming from a proxy. Traffic is coming from Ingress Nginx, which is a proxy.
@@ -14,7 +19,11 @@ app.use(
   })
 );
 
+app.use(currentUser); // Middleware to check if the user is signed in
+
 require("express-async-errors");
+
+app.use(createTicketRouter); // Route to create a new ticket
 
 app.all("*", async (req, res) => {
   throw new NotFoundError();
