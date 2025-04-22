@@ -8,6 +8,7 @@ import {
   currentUser,
 } from "@juanludetickets/common";
 import { createTicketRouter } from "./routes/new";
+import { showTicketRouter } from "./routes/show";
 
 const app = express();
 app.set("trust proxy", true); // Trust traffic as secure even though it is coming from a proxy. Traffic is coming from Ingress Nginx, which is a proxy.
@@ -24,6 +25,7 @@ app.use(currentUser); // Middleware to check if the user is signed in
 require("express-async-errors");
 
 app.use(createTicketRouter); // Route to create a new ticket
+app.use(showTicketRouter); // Route to show a ticket
 
 app.all("*", async (req, res) => {
   throw new NotFoundError();
