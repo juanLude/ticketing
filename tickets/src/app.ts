@@ -9,6 +9,7 @@ import {
 } from "@juanludetickets/common";
 import { createTicketRouter } from "./routes/new";
 import { showTicketRouter } from "./routes/show";
+import { indexTicketRouter } from "./routes/index";
 
 const app = express();
 app.set("trust proxy", true); // Trust traffic as secure even though it is coming from a proxy. Traffic is coming from Ingress Nginx, which is a proxy.
@@ -26,7 +27,7 @@ require("express-async-errors");
 
 app.use(createTicketRouter); // Route to create a new ticket
 app.use(showTicketRouter); // Route to show a ticket
-
+app.use(indexTicketRouter); // Route to list all tickets
 app.all("*", async (req, res) => {
   throw new NotFoundError();
 });
