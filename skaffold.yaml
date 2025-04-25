@@ -4,6 +4,10 @@ deploy:
   kubectl:
     manifests:
       - ./infra/k8s/*
+    flags:
+      apply:
+        - -n
+        - ticketing
 build:
   # local:
   #   push: false
