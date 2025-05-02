@@ -10,6 +10,12 @@ const stan = nats.connect("ticketing", randomBytes(4).toString("hex"), {
 stan.on("connect", () => {
   console.log("Listener connected to NATS");
 
+  // Handle NATS connection close event to gracefully exit the process
+  stan.on("close", () => {
+    console.log("NATS connection closed!");
+    process.exit();
+  });
+
   const options = stan.subscriptionOptions().setManualAckMode(true); // Set manual acknowledgment mode
   const subscription = stan.subscribe(
     "ticket:created",
@@ -26,3 +32,6 @@ stan.on("connect", () => {
   });
   console.log("Listening for messages on ticket:created");
 });
+
+process.on("SIGINT", () => stan.close()); // Close NATS connection on SIGINT. This is typically sent when the user presses Ctrl+C in the terminal.
+process.on("SIGTERM", () => stan.close()); // Close NATS connection on SIGTERM. This is typically sent when the process is terminated by a signal from the operating system.
