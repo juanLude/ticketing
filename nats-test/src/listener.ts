@@ -16,10 +16,14 @@ stan.on("connect", () => {
     process.exit();
   });
 
-  const options = stan.subscriptionOptions().setManualAckMode(true); // Set manual acknowledgment mode
+  const options = stan
+    .subscriptionOptions()
+    .setManualAckMode(true)
+    .setDeliverAllAvailable() // This option is used to deliver all available messages from the stream.
+    .setDurableName("accounting-service"); // This option is used to create a durable subscription, which allows the subscriber to receive messages even if it is not connected at the time the messages are published.
   const subscription = stan.subscribe(
     "ticket:created",
-    "orders-service-queue-group",
+    "queue-group-name",
     options
   );
   subscription.on("message", (msg: Message) => {
