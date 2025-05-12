@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import { requireAuth, validateRequest } from "@juanludetickets/common";
 import { body } from "express-validator";
 import { Ticket } from "../models/ticket";
+import { TicketCreatedPublisher } from "../../events/publishers/ticket-created.publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -18,10 +20,17 @@ router.post(
       .withMessage("Price must be greater than 0"),
   ],
   validateRequest,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const { title, price } = req.body; // Destructure title and price from the request body
     const ticket = Ticket.build({ title, price, userId: req.currentUser!.id }); // Create a new Ticket instance
-    ticket.save(); // Save the ticket to the database
+    await ticket.save(); // Save the ticket to the database
+    // Publish an event to notify other services about the ticket creation
+    await new TicketCreatedPublisher(natsWrapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+    });
     res.status(201).send(ticket); // Respond with a 201 status code and the created ticket
   }
 );

@@ -6,6 +6,7 @@ export interface TicketCreatedEvent {
     id: string;
     title: string;
     price: number;
+    userId: string;
   };
 }
 // This interface defines the structure of the TicketCreated event,
