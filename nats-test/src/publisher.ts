@@ -14,6 +14,7 @@ stan.on("connect", async () => {
       id: "123",
       title: "concert",
       price: 20,
+      userId: "123",
     }); // Publish a message to the NATS server
   } catch (err) {
     console.error("Error publishing event", err);
