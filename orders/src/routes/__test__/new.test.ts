@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import request from "supertest";
 import { app } from "../../app";
-
+console.log("🔥 Test file loaded");
 it("returns an error if the ticket is not found", async () => {
+  console.log("ENV:", process.env.NODE_ENV);
   const ticketId = new mongoose.Types.ObjectId().toHexString(); // Generate a new ObjectId
   await request(app)
     .post("/api/orders")
