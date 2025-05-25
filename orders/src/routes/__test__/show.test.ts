@@ -48,9 +48,11 @@ it("returns an error if one user tries to fetch another user's order", async () 
     .expect(201);
 
   // Make request to fetch the order
-  await request(app)
+  const { body: fetchedOrder } = await request(app)
     .get(`/api/orders/${order.id}`)
     .set("Cookie", global.signin())
     .send()
     .expect(401);
+
+  expect(fetchedOrder.id).toEqual(order.id);
 });
