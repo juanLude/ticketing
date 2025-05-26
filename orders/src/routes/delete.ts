@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import { Order, OrderStatus } from "../../models/order";
 import { NotFoundError, requireAuth } from "@juanludetickets/common";
+import { OrderCancelledPublisher } from "../events/publishers/order-cancelled-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -23,6 +25,13 @@ router.delete(
     order.status = OrderStatus.Cancelled; // Set the order status to Cancelled
     await order.save();
 
+    // Publish an event to notify other services that the order was cancelled
+    await new OrderCancelledPublisher(natsWrapper.client).publish({
+      id: order.id,
+      ticket: {
+        id: order.ticket.id,
+      },
+    });
     res.status(204).send(order); // Send a 204 No Content response
   }
 );
