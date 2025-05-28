@@ -3,6 +3,8 @@ import request from "supertest";
 import { app } from "../../app";
 import { Ticket } from "../../../models/ticket";
 import { Order, OrderStatus } from "../../../models/order";
+import { natsWrapper } from "../../nats-wrapper";
+
 console.log("🔥 Test file loaded");
 it("returns an error if the ticket is not found", async () => {
   console.log("ENV:", process.env.NODE_ENV);
@@ -51,4 +53,26 @@ it("reserves a ticket", async () => {
     .set("Cookie", global.signin())
     .send({ ticketId })
     .expect(201);
+});
+
+it("emits an order created event", async () => {
+  const ticketId = new mongoose.Types.ObjectId().toHexString(); // Generate a new ObjectId
+  const ticket = Ticket.build({
+    id: ticketId,
+    title: "concert",
+    price: 20,
+  });
+  await ticket.save();
+
+  const { body: order } = await request(app)
+    .post("/api/orders")
+    .set("Cookie", global.signin())
+    .send({ ticketId: ticket.id })
+    .expect(201);
+
+  await request(app)
+    .delete(`/api/orders/${order.id}`)
+    .set("Cookie", global.signin())
+    .expect(204);
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
 });
