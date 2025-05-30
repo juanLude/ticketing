@@ -42,7 +42,13 @@ const ticketSchema = new mongoose.Schema(
 );
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-  return new Ticket(attrs);
+  return new Ticket({
+    _id: attrs.id, // Use the provided id as the _id of the document.
+    // This is important for the ticket to be found by its id later.
+    // Mongoose uses _id as the primary key, so we set it to the id provided in attrs
+    title: attrs.title,
+    price: attrs.price,
+  });
 };
 ticketSchema.methods.isReserved = async function () {
   const existingOrder = await Order.findOne({
